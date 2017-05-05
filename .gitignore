@@ -1,0 +1,8 @@
+*.swp
+/Plack-App-Catmandu-*
+/.build
+/_build*
+/Build
+MYMETA.*
+!META.json
+/.prove
