@@ -1,36 +1,48 @@
-package Plack::App::Catmandu;
+package Plack::App::Catmandu::Bag;
 
 use Catmandu::Sane;
 
 our $VERSION = '0.01';
 
-use parent qw(Plack::Component);
-use JSON qw(encode_json);
+use parent 'Plack::Component';
+use Catmandu;
 use Router::Simple;
-use Moo;
+use JSON qw(encode_json);
+use namespace::clean;
 
-has bag => (is => 'ro', required => 1);
-has router => (is => 'lazy', init_arg => undef);
+sub bag {
+    my ($self) = @_; $self->{_bag} ||= $self->_build_bag;
+}
+
+sub router {
+    my ($self) = @_; $self->{_router} ||= $self->_build_router;
+}
+
+sub _build_bag {
+    my ($self) = @_;
+    Catmandu->store($self->{store})->bag($self->{bag});
+}
 
 sub _build_router {
     my ($self) = @_;
-    my $bag = $self->bag;
     my $router = Router::Simple->new;
-    if ($bag->does('Catmandu::Plugin::Versioning')) {
+    if ($self->bag->does('Catmandu::Plugin::Versioning')) {
         $router->connect('/{id}/versions', {action => 'version_list'}, {method => 'GET'});
-        $router->connect('/{id}/versions/{version}', {action => 'version_get'}, {method => 'GET'});
+        $router->connect('/{id}/versions/{version}', {action => 'version_show'}, {method => 'GET'});
     }
     $router->connect('/', {action => 'list'}, {method => 'GET'});
-    $router->connect('/{id}', {action => 'get'}, {method => 'GET'});
+    $router->connect('/{id}', {action => 'show'}, {method => 'GET'});
     $router;
 }
 
 sub list {
     my ($self, $params) = @_;
-    $self->ok($self->bag->take(1000)->to_array);
+    my $start = $params->{start} // 0;
+    my $limit = $params->{limit} // 10;
+    $self->ok($self->bag->slice($start, $limit)->to_array);
 }
 
-sub get {
+sub show {
     my ($self, $params) = @_;
     if (my $data = $self->bag->get($params->{id})) {
         $self->ok($data);
@@ -48,7 +60,7 @@ sub version_list {
     }
 }
 
-sub version_get {
+sub version_show {
     my ($self, $params) = @_;
     if (my $data = $self->bag->get_version($params->{id}, $params->{version})) {
         $self->ok($data);
@@ -59,14 +71,11 @@ sub version_get {
 
 sub ok {
     my ($self, $data) = @_;
-    my $res = {
-        data => $data,
-    };
-
+    my $res = {data => $data};
     [
         '200',
-        [ 'Content-Type' => 'application/vnd.api+json' ],
-        [ encode_json($res) ],
+        ['Content-Type' => 'application/vnd.api+json'],
+        [encode_json($res)],
     ];
 }
 
@@ -99,7 +108,7 @@ __END__
 
 =head1 NAME
 
-Plack::App::Catmandu - Blah blah blah
+Plack::App::Catmandu::Bag - Blah blah blah
 
 =head1 SYNOPSIS
 
