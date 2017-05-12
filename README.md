@@ -18,6 +18,10 @@ Plack::App::Catmandu::Bag - Plack application that wraps a REST API around a Cat
         );
     };
 
+# DESCRIPTION
+
+This is an early minimal release, look at the tests for usage.
+
 # AUTHOR
 
 Nicolas Steenlant <nicolas.steenlant@ugent.be>
