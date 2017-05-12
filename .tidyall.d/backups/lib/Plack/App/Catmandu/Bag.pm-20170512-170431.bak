@@ -11,13 +11,11 @@ use JSON qw(encode_json);
 use namespace::clean;
 
 sub bag {
-    my ($self) = @_;
-    $self->{_bag} ||= $self->_build_bag;
+    my ($self) = @_; $self->{_bag} ||= $self->_build_bag;
 }
 
 sub router {
-    my ($self) = @_;
-    $self->{_router} ||= $self->_build_router;
+    my ($self) = @_; $self->{_router} ||= $self->_build_router;
 }
 
 sub _build_bag {
@@ -29,18 +27,10 @@ sub _build_router {
     my ($self) = @_;
     my $router = Router::Simple->new;
     if ($self->bag->does('Catmandu::Plugin::Versioning')) {
-        $router->connect(
-            '/{id}/versions',
-            {action => 'version_list'},
-            {method => 'GET'}
-        );
-        $router->connect(
-            '/{id}/versions/{version}',
-            {action => 'version_show'},
-            {method => 'GET'}
-        );
+        $router->connect('/{id}/versions', {action => 'version_list'}, {method => 'GET'});
+        $router->connect('/{id}/versions/{version}', {action => 'version_show'}, {method => 'GET'});
     }
-    $router->connect('/',     {action => 'list'}, {method => 'GET'});
+    $router->connect('/', {action => 'list'}, {method => 'GET'});
     $router->connect('/{id}', {action => 'show'}, {method => 'GET'});
     $router;
 }
@@ -56,8 +46,7 @@ sub show {
     my ($self, $params) = @_;
     if (my $data = $self->bag->get($params->{id})) {
         $self->ok($data);
-    }
-    else {
+    } else {
         $self->not_found;
     }
 }
@@ -66,19 +55,16 @@ sub version_list {
     my ($self, $params) = @_;
     if (my $data = $self->bag->get_history($params->{id})) {
         $self->ok($data);
-    }
-    else {
+    } else {
         $self->not_found;
     }
 }
 
 sub version_show {
     my ($self, $params) = @_;
-    if (my $data = $self->bag->get_version($params->{id}, $params->{version}))
-    {
+    if (my $data = $self->bag->get_version($params->{id}, $params->{version})) {
         $self->ok($data);
-    }
-    else {
+    } else {
         $self->not_found;
     }
 }
@@ -87,7 +73,8 @@ sub ok {
     my ($self, $data) = @_;
     my $res = {data => $data};
     [
-        '200', ['Content-Type' => 'application/vnd.api+json'],
+        '200',
+        ['Content-Type' => 'application/vnd.api+json'],
         [encode_json($res)],
     ];
 }
@@ -107,11 +94,9 @@ sub call {
     if (my $params = $router->match($env)) {
         my $action = $params->{action};
         $self->$action($params);
-    }
-    elsif ($router->method_not_allowed) {
+    } elsif ($router->method_not_allowed) {
         $self->method_not_allowed;
-    }
-    else {
+    } else {
         $self->not_found;
     }
 }

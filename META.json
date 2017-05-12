@@ -1,5 +1,5 @@
 {
-   "abstract" : "Blah blah blah",
+   "abstract" : "Plack application that wraps a REST API around a Catmandu::Bag",
    "author" : [
       "Nicolas Steenlant <nicolas.steenlant@ugent.be>"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : 2
    },
-   "name" : "Plack-App-Catmandu",
+   "name" : "Plack-App-Catmandu-Bag",
    "no_index" : {
       "directory" : [
          "eg",
@@ -37,7 +37,11 @@
       },
       "runtime" : {
          "requires" : {
-            "perl" : "5.008005"
+            "Catmandu" : "1.0506",
+            "JSON" : "0",
+            "Plack" : "1.0042",
+            "Router::Simple" : "0.17",
+            "perl" : "v5.10.1"
          }
       },
       "test" : {
@@ -47,6 +51,17 @@
       }
    },
    "release_status" : "stable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/LibreCat/Plack-App-Catmandu-Bag/issues"
+      },
+      "homepage" : "https://github.com/LibreCat/Plack-App-Catmandu-Bag",
+      "repository" : {
+         "type" : "git",
+         "url" : "https://github.com/LibreCat/Plack-App-Catmandu-Bag.git",
+         "web" : "https://github.com/LibreCat/Plack-App-Catmandu-Bag"
+      }
+   },
    "version" : "0.01",
    "x_serialization_backend" : "Cpanel::JSON::XS version 3.0231"
 }
