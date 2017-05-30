@@ -2,7 +2,7 @@ package Plack::App::Catmandu::Bag;
 
 use Catmandu::Sane;
 
-our $VERSION = '0.01';
+our $VERSION = '0.0101';
 
 use parent 'Plack::Component';
 use Catmandu;
