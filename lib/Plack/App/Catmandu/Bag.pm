@@ -40,8 +40,9 @@ sub _build_router {
             {method => ['GET', 'HEAD']},
         );
     }
-    $router->connect('/',     {action => 'list'}, {method => ['GET', 'HEAD']});
-    $router->connect('/{id}', {action => 'show'}, {method => ['GET', 'HEAD']});
+    $router->connect('/', {action => 'list'}, {method => ['GET', 'HEAD']});
+    $router->connect('/{id}', {action => 'show'},
+        {method => ['GET', 'HEAD']});
     $router;
 }
 
