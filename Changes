@@ -1,6 +1,7 @@
 Revision history for Plack-App-Catmandu-Bag
 
 {{$NEXT}}
+        - add missing dependency
 
 0.0101  2017-05-30 14:36:26 CEST
         - support HEAD requests
