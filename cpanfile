@@ -4,6 +4,7 @@ on test => sub {
 
 requires 'Catmandu', '1.0506';
 requires 'JSON', 0;
+requires 'Module::Build', '>=0.4229'; # travis ci
 requires 'Plack', '1.0042';
 requires 'Router::Simple', '0.17';
 requires 'namespace::clean', 0;
